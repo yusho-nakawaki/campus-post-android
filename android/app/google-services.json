@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "966611311546",
+    "firebase_url": "https://match-6e1d8-default-rtdb.firebaseio.com",
+    "project_id": "match-6e1d8",
+    "storage_bucket": "match-6e1d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966611311546:android:2e6badec99fe7cfd369b83",
+        "android_client_info": {
+          "package_name": "com.example.campuspost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966611311546-6g7ljnms5n6d8t5c9h0lmffpmsho7o2r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf5ayfOHiQnca-5MtSEQFJ-GqAPYrqqxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966611311546-6g7ljnms5n6d8t5c9h0lmffpmsho7o2r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "966611311546-ukh41vkm2thcfc4tg64n29s82soo98bl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "net.aminote.Match"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966611311546:android:f411da61b56537fb369b83",
+        "android_client_info": {
+          "package_name": "net.campuspost.campus_post"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966611311546-6g7ljnms5n6d8t5c9h0lmffpmsho7o2r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf5ayfOHiQnca-5MtSEQFJ-GqAPYrqqxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966611311546-6g7ljnms5n6d8t5c9h0lmffpmsho7o2r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "966611311546-ukh41vkm2thcfc4tg64n29s82soo98bl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "net.aminote.Match"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

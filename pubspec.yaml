@@ -1,0 +1,44 @@
+name: campuspost
+description: A new Flutter application.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_slidable: ^0.5.7
+  flutter_hooks: ^0.15.0
+  hooks_riverpod: ^0.11.0
+  intl: ^0.16.1
+  firebase_core: ^0.7.0
+  cloud_firestore: ^0.16.0
+  firebase_storage: ^7.0.0
+  image_picker: ^0.6.2+1 #get images from smartphone
+  firebase_auth: ^0.20.0+1
+  firebase_database: ^6.0.0
+  carousel_slider: ^3.0.0
+  flutter_boom_menu: ^1.0.2
+  webview_flutter: ^1.0.7
+  like_button: ^1.0.4
+  snapping_sheet: ^2.0.2
+
+
+  cupertino_icons: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  uses-material-design: true
+
+  # fetch images from local
+  assets:
+    - assets/images/
