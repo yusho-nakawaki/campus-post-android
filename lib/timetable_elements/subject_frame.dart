@@ -10,6 +10,38 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+class SubjectModel {
+  int period;
+  int dayNum;
+  String dayKanji;
+  String name;
+  String faculty;
+  String university;
+  String teacher;
+  String subjectID;
+  String createdBy;
+  SubjectModel({
+    int period,
+    int dayNum,
+    String name,
+    String faculty,
+    String university,
+    String teacher,
+    String subjectID,
+    String createdBy,
+  }){
+    this.period = period;
+    this.dayNum = dayNum;
+    this.name = name;
+    this.faculty = faculty;
+    this.university = university;
+    this.teacher = teacher;
+    this.subjectID = subjectID;
+    this.createdBy = createdBy;
+
+}
+}
+
 class SubjectFrame extends HookWidget{
   int _period;
   String _periodString;
@@ -112,7 +144,7 @@ class SubjectFrame extends HookWidget{
                                 context,
                                 MaterialPageRoute(
                                     builder: (BuildContext context) {
-                                      return SubjectInfo(day: _day, period: _period,);
+                                      return SubjectInfo(day: _day, period: _period,  id: _subjectID);
                                     },
                                     fullscreenDialog: true
                                 )
