@@ -1,3 +1,4 @@
+import 'package:campuspost/Models/subject_model.dart';
 import 'package:campuspost/providers.dart';
 import 'package:campuspost/routes/subject_edit_route.dart';
 import 'package:campuspost/routes/subject_route.dart';
@@ -10,37 +11,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SubjectModel {
-  int period;
-  int dayNum;
-  String dayKanji;
-  String name;
-  String faculty;
-  String university;
-  String teacher;
-  String subjectID;
-  String createdBy;
-  SubjectModel({
-    int period,
-    int dayNum,
-    String name,
-    String faculty,
-    String university,
-    String teacher,
-    String subjectID,
-    String createdBy,
-  }){
-    this.period = period;
-    this.dayNum = dayNum;
-    this.name = name;
-    this.faculty = faculty;
-    this.university = university;
-    this.teacher = teacher;
-    this.subjectID = subjectID;
-    this.createdBy = createdBy;
-
-}
-}
 
 class SubjectFrame extends HookWidget{
   int _period;
@@ -82,7 +52,7 @@ class SubjectFrame extends HookWidget{
     final _databaseReference = FirebaseDatabase.instance.reference();
     final _firestoreReference = FirebaseFirestore.instance;
     final String _userID = useProvider(userIDProvider).state;
-    final String _university = '早稲田大学';
+    final String _university = '早稲田大学'; //ここは後にprofileproviderから取得するように変更
 
     return StreamBuilder<DocumentSnapshot> (
       stream: _firestoreReference.collection('users').doc(_userID).snapshots(),
@@ -110,7 +80,18 @@ class SubjectFrame extends HookWidget{
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text("Loading");
             }
-            final String _subjectName = snapshot.data.data()['name'];
+            // final String _subjectName = snapshot.data.data()['name'];
+            final SubjectModel _subject = SubjectModel(
+              period: _period,
+              dayNum: _day,
+              name: snapshot.data.data()['name'],
+              faculty: snapshot.data.data()['faculty'],
+              university: _university,
+              teacher: snapshot.data.data()['teacher'],
+              subjectID: _subjectID,
+              place: snapshot.data.data()['place'],
+              createdBy: snapshot.data.data()['created_by'],
+            );
             return Expanded(
                 child: Container(
                   margin: EdgeInsets.all(5),
@@ -144,7 +125,7 @@ class SubjectFrame extends HookWidget{
                                 context,
                                 MaterialPageRoute(
                                     builder: (BuildContext context) {
-                                      return SubjectInfo(day: _day, period: _period,  id: _subjectID);
+                                      return SubjectInfo(_subject);
                                     },
                                     fullscreenDialog: true
                                 )
@@ -153,7 +134,7 @@ class SubjectFrame extends HookWidget{
                           child: Container(
                             child: Column(
                               children: [
-                                Expanded(child: Center(child: Text(_subjectName))),
+                                Expanded(child: Center(child: Text(_subject.name))),
                                 Expanded(child: Center(child: Text('クラスメート：塩原さん他', style: TextStyle(fontSize: 10),))),
                               ],
                             ),

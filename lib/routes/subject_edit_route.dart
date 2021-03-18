@@ -48,6 +48,7 @@ class SubjectEdit extends HookWidget{
     final _nameTextController = TextEditingController();
     final _teacherTextController = TextEditingController();
     final _facultyTextController = TextEditingController();
+    final _placeTextController = TextEditingController();
     final String _university = '早稲田大学';
 
     void _addSubject(){
@@ -64,6 +65,7 @@ class SubjectEdit extends HookWidget{
         'period': _period,
         'day': _dayKanji,
         'university': _university,
+        'place': _placeTextController.text,
       });
     }
 
@@ -101,11 +103,11 @@ class SubjectEdit extends HookWidget{
                       Expanded(child: IconButton(
                         icon: Icon(Icons.add),
                         onPressed: (){
-
                           showDialog(
                             context: context,
                             builder: (_) {
                               return AlertDialog(
+                                scrollable: true,
                                 title: Text('授業の新規作成'),
                                 content: Column(
                                   children: [
@@ -151,6 +153,22 @@ class SubjectEdit extends HookWidget{
                                                   flex: 2,
                                                   child: TextField(
                                                     controller: _facultyTextController,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        )
+                                    ),
+                                    Container(
+                                        height: 50,
+                                        child: Center(
+                                            child: Row(
+                                              children: [
+                                                Expanded(child: Text('教室:', style: TextStyle(fontSize: 14),)),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: TextField(
+                                                    controller: _placeTextController,
                                                   ),
                                                 ),
                                               ],

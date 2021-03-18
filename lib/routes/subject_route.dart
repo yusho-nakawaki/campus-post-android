@@ -1,3 +1,4 @@
+import 'package:campuspost/Models/subject_model.dart';
 import 'package:campuspost/providers.dart';
 import 'package:campuspost/subject_elements/subject_classmates.dart';
 import 'package:campuspost/subject_elements/subject_counter.dart';
@@ -8,38 +9,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/all.dart';
 
 class SubjectInfo extends HookWidget{
-  int _day;
-  String _dayKanji;
-  int _period;
-  String _periodString;
-  String _subjectID;
-  SubjectInfo({int day, int period, String id}){
-    switch(day){
-      case 0:
-        _dayKanji = '月';
-        break;
-      case 1:
-        _dayKanji = '火';
-        break;
-      case 2:
-        _dayKanji = '水';
-        break;
-      case 3:
-        _dayKanji = '木';
-        break;
-      case 4:
-        _dayKanji = '金';
-        break;
-      case 5:
-        _dayKanji = '土';
-        break;
-      default:
-        break;
-    }
-    this._day = day;
-    this._period = period;
-    this._periodString = period.toString();
-    this._subjectID = id;
+  SubjectModel _subject;
+  SubjectInfo(SubjectModel subject){
+    this._subject = subject;
   }
   @override
   Widget build(BuildContext context) {
@@ -50,7 +22,7 @@ class SubjectInfo extends HookWidget{
     ];
     final List<Widget> _states = [
       SubjectTasks(),
-      SubjectClassmates(day: _day, period: _period, id: _subjectID),
+      SubjectClassmates(_subject),
       SubjectCounter(),
     ];
 
