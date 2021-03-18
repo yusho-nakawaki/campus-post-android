@@ -27,6 +27,7 @@ dependencies:
   webview_flutter: ^1.0.7
   like_button: ^1.0.4
   snapping_sheet: ^2.0.2
+  shared_preferences: ^2.0.2 #端末内にデータを簡単に保存できる → たくさんは保存できない
 
 
   cupertino_icons: ^1.0.0

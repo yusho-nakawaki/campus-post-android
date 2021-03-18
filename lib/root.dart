@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'friend_files/search_friends.dart';
 import 'routes/timeline_route.dart';
 import 'routes/profile_route.dart';
 import 'routes/talk_route.dart';
@@ -38,7 +39,9 @@ class RootWidget extends HookWidget {
   ];
   @override
   Widget build(BuildContext context) {
+
     final int state = useProvider(rootProvider).state;
+    final String _userID = useProvider(userIDProvider).state;
     final _bottomNavigationBarItems = <BottomNavigationBarItem>[];
     for (var i = 0; i < _itemNames.length; i++) {
       if (i == state) {
@@ -71,7 +74,16 @@ class RootWidget extends HookWidget {
             padding: const EdgeInsets.all(4.0),
             child: IconButton(
               icon: Icon(Icons.search),
-              onPressed: () => {},
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FriendsListPage(
+                        // riverpodがよくわからなくて、画面遷移でemailを渡している
+                        myEmail: _userID
+                    ),
+                    )
+                )
+              },
             ),
           ),
           Padding(
