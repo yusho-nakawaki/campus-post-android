@@ -7,7 +7,7 @@ class SubjectTasks extends HookWidget{
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Text('task'),
+        Center(child: Text('task')),
       ],
     );
   }

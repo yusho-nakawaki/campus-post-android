@@ -42,7 +42,7 @@ class SubjectInfo extends HookWidget{
                       padding: EdgeInsets.all(2),
                       child: Row(
                         children: [
-                          Expanded(child: Text('_subjectID', style: TextStyle(fontSize: 18),)),
+                          Expanded(child: Text(_subject.name, style: TextStyle(fontSize: 18),)),
                           Expanded(flex: 3, child: Container()),
                         ],
                       ),
@@ -57,9 +57,9 @@ class SubjectInfo extends HookWidget{
                             Expanded(
                               child: Column(
                                 children: [
-                                  Expanded(child: Center(child: Text('_subjectID', style: TextStyle(color: Colors.white),))),
-                                  Expanded(child: Center(child: Text('_subjectID', style: TextStyle(color: Colors.white),))),
-                                  Expanded(child: Center(child: Text('_subjectID', style: TextStyle(color: Colors.white),))),
+                                  Expanded(child: Center(child: Text(_subject.university, style: TextStyle(color: Colors.white),))),
+                                  Expanded(child: Center(child: Text(_subject.teacher, style: TextStyle(color: Colors.white),))),
+                                  Expanded(child: Center(child: Text(_subject.dayKanji, style: TextStyle(color: Colors.white),))),
                                 ],
                               ),
                             ),
@@ -74,9 +74,9 @@ class SubjectInfo extends HookWidget{
                             Expanded(
                               child: Column(
                                 children: [
-                                  Expanded(child: Center(child: Text('_subjectID', style: TextStyle(color: Colors.white),))),
-                                  Expanded(child: Center(child: Text('_subjectID', style: TextStyle(color: Colors.white),))),
-                                  Expanded(child: Center(child: Text('_subjectID', style: TextStyle(color: Colors.white),))),
+                                  Expanded(child: Center(child: Text(_subject.faculty, style: TextStyle(color: Colors.white),))),
+                                  Expanded(child: Center(child: Text(_subject.place, style: TextStyle(color: Colors.white),))),
+                                  Expanded(child: Center(child: Text(_subject.periodString, style: TextStyle(color: Colors.white),))),
                                 ],
                               ),
                             ),
