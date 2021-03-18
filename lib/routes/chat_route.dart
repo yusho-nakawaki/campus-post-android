@@ -25,13 +25,15 @@ class Chat extends HookWidget {
   String _partnerID;
   String _timeStamp;
   String _partnerName;
+  // bool _isNewConversation;
   String getTimeStamp() {
     return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now().toLocal());
   }
-  Chat({String chatID, String partnerID, String partnerName}) {
+  Chat({String chatID, String partnerID, String partnerName, }) {
     this._chatID = chatID;
     this._partnerName = partnerName;
     this._partnerID = partnerID;
+    // @required _isNewConversation =
   }
 
 

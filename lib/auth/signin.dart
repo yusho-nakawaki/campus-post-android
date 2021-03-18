@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends HookWidget {
   final _addressController = TextEditingController();
@@ -48,6 +49,9 @@ class SignInPage extends HookWidget {
                     password: _passwordController.text,
                   );
                   context.read(userIDProvider).state = addressToID(_authReference.currentUser.email);
+                  // ちょっとしたデータを端末内に保存できる
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('email', addressToID(_authReference.currentUser.email));
                   _addressController.text = '';
                   _passwordController.text = '';
                   context.read(rootProvider).state = 1;
