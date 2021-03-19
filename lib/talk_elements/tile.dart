@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:campuspost/Models/conversation_model.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -26,7 +29,21 @@ class Tile extends HookWidget {
   Widget build(BuildContext context) {
 
     final _databaseReference = FirebaseDatabase.instance.reference();
+    final _storage = FirebaseStorage.instance.ref();
     final String _userID = useProvider(userIDProvider).state;
+
+    // imageを取得
+    Future<String> _getFriendUrl() async {
+      Reference ref = _storage.child("profile_picture/${_conversation.partnerEmail}-profile.png");
+      var imageUrl = await ref.getDownloadURL();
+      if (imageUrl != null) {
+        return imageUrl;
+      }
+      else {
+        return null;
+      }
+
+    }
 
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
@@ -36,23 +53,45 @@ class Tile extends HookWidget {
         color: Colors.white,
         child: ListTile(
           leading: CircleAvatar(
-            child: Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(35)),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      'https://pbs.twimg.com/profile_images/1181141619061354496/ah2gg_Su_400x400.png'
+            child: FutureBuilder(
+              future: _getFriendUrl(),
+              builder: (context, snapshot) {
+
+                // エラー時に表示するWidget
+                if (snapshot.hasError) {
+                  return Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(35)),
+                      color: Colors.blue,
                     ),
-                  ),
-                ),
-                // child: Image.network(
-                //   'https://www.google.com/url?sa=i&url=https%3A%2F%2Ftwitter.com%2Fminami_voyage&psig=AOvVaw1vSZTp1HiXcUvswoZdLM10&ust=1615967855471000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOiAy8OrtO8CFQAAAAAdAAAAABAP',
-                //   height: 70,
-                //   width: 70,
-                // ),
-              ),
+                  );
+                }
+
+                // Firebaseのinitialize完了したら表示したいWidget
+                if (snapshot.connectionState == ConnectionState.done) {
+                  print(snapshot.data);
+                  return Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(35)),
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: (snapshot.data == null) ? AssetImage('assets/images/noImage.png') :
+                        NetworkImage(
+                            snapshot.data
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                // Firebaseのinitializeが完了するのを待つ間に表示するWidget
+                return Center(child: CircularProgressIndicator());
+              }
+            ),
           ),
           title: Padding(
             padding: EdgeInsets.only(
@@ -129,6 +168,7 @@ class Tile extends HookWidget {
                       chatID: _conversation.id,
                       partnerID: _conversation.partnerEmail,
                       partnerName: _conversation.partnerName,
+                      isNew: false,
                     )
                 )
             )

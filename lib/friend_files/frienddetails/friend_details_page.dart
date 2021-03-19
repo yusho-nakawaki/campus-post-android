@@ -8,12 +8,16 @@ import 'header/friend_detail_header.dart';
 
 class FriendDetailsPage extends StatefulWidget {
   FriendDetailsPage({
-    @required this.friend,
+    this.friend,
     this.avatarTag,
+    this.isFriend,
+    this.isMe
   });
 
   final Friend friend;
   final Object avatarTag;
+  final bool isFriend;
+  final bool isMe;
 
   @override
   _FriendDetailsPageState createState() => new _FriendDetailsPageState();
@@ -43,6 +47,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
               new FriendDetailHeader(
                 friend: widget.friend,
                 avatarTag: widget.avatarTag,
+                isFriend: widget.isFriend,
               ),
               new Padding(
                 padding: const EdgeInsets.all(24.0),

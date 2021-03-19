@@ -25,15 +25,16 @@ class Chat extends HookWidget {
   String _partnerID;
   String _timeStamp;
   String _partnerName;
-  // bool _isNewConversation;
+  bool _isNewConversation;
   String getTimeStamp() {
     return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now().toLocal());
   }
-  Chat({String chatID, String partnerID, String partnerName, }) {
+
+  Chat({String chatID, String partnerID, String partnerName, @required isNew}) {
     this._chatID = chatID;
     this._partnerName = partnerName;
     this._partnerID = partnerID;
-    // @required _isNewConversation =
+    this._isNewConversation = isNew;
   }
 
 
@@ -202,7 +203,7 @@ class Chat extends HookWidget {
               );
             }
             else
-              return Text("No data");
+              return Container();
           },
         ),
         bottomNavigationBar: BottomAppBar(
@@ -246,8 +247,24 @@ class Chat extends HookWidget {
                   icon: Icon(Icons.send),
                   onPressed: () {
                     if(_textController.text != ''){
-                      _insertRealtimeNode(_textController.text, "text");
-                      _textController.text = "";
+                      if (_isNewConversation == false) {
+                        // 通常の送信
+                        _insertRealtimeNode(_textController.text, "text");
+                        _textController.text = "";
+                      }
+                      else {
+                        // 初めての送信
+                        _isNewConversation = false;
+                        _databaseReference.child("all_users/$_userID/conversations/$_chatID")
+                            .set({"id": _chatID, "my_name": "please set up name", "my_notification": true,
+                                  "partner_email": _partnerID, "partner_name": _partnerName, "partner_notification": true});
+                        _databaseReference.child("all_users/$_partnerID/conversations/$_chatID")
+                            .set({"id": _chatID, "my_name": _partnerName, "my_notification": true,
+                          "partner_email": _userID, "partner_name": "please set up name", "partner_notification": true});
+
+                        _insertRealtimeNode(_textController.text, "text");
+                        _textController.text = "";
+                      }
                     }
                   },
                 ),

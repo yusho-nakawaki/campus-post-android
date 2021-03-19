@@ -27,7 +27,9 @@ class Talk extends HookWidget{
             Map data = snap.data.snapshot.value;
             List item = [];
             data.forEach((index, data) => item.add({"key": index, ...data}));
-            item.sort((a, b) => a['date'].toString().compareTo(b['date'].toString()));
+            item.sort((b, a) =>
+                a['latest_message']['date'].toString().compareTo(b['latest_message']['date'].toString())
+            );
             return ListView.builder(
               itemCount: item.length,
               itemBuilder: (context, index) {

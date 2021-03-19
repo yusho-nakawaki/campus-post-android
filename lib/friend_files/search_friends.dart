@@ -5,6 +5,7 @@ import 'package:campuspost/friend_files/friends_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class FriendsListPage extends StatefulWidget {
@@ -30,6 +31,15 @@ class _FriendsListPageState extends State<FriendsListPage> {
 
   Future<void> _loadFriends() async {
 
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    dynamic _myFriends = pref.get("friendsList");
+    if (_myFriends is List<String>) {
+      print(_myFriends);
+    }
+    else {
+      print("no insert friends");
+    }
+
     final _databaseReference = FirebaseDatabase.instance.reference();
     await _databaseReference.child('users/sae-gmail-com/フォロー')
         .once().then((snapshot) => {
@@ -45,7 +55,6 @@ class _FriendsListPageState extends State<FriendsListPage> {
                 .then((snapshot2) =>
             {
               if (snapshot2.value != null) {
-                print(snapshot2.value),
                 _friends.add(Friend(
                   avatar: snapshot2.value['picture'],
                   name: snapshot2.value['name'],
@@ -68,20 +77,24 @@ class _FriendsListPageState extends State<FriendsListPage> {
           print("no friends")
        }
     });
-
-
   }
+
 
   // 個別cell
   Widget _buildFriendListTile(BuildContext context, int index) {
     var friend = _friends[index];
+    bool isFriend = false;
 
     return Padding(
       padding: EdgeInsets.only(
         top: 5,
       ),
       child: new ListTile(
-        onTap: () => _navigateToFriendDetails(friend, index),
+        onTap: () async =>
+        {
+          isFriend = await _isCheckFriend(index),
+          _navigateToFriendDetails(friend, index, isFriend),
+        },
         leading: new Hero(
           tag: index,
           child: new CircleAvatar(
@@ -93,18 +106,43 @@ class _FriendsListPageState extends State<FriendsListPage> {
     );
   }
 
-  void _navigateToFriendDetails(Friend friend, Object avatarTag) {
+  void _navigateToFriendDetails(Friend friend, Object avatarTag, bool isFriend) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
-          return new FriendDetailsPage(friend: friend, avatarTag: avatarTag);
+          return new FriendDetailsPage(friend: friend, avatarTag: avatarTag, isFriend: isFriend, isMe: false);
         },
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Future<bool> _isCheckFriend(int index) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    dynamic _myFriends = pref.get("friendsList");
+    if (_myFriends is List<String>) {
+      if (_myFriends == null || _myFriends.length == 0) {
+        print("oh ... I don't understand SharedPreferences");
+        return false;
+      }
+      for (int i = 0; i < _myFriends.length; i++) {
+        if (_myFriends[i] == _friends[index].email) {
+          print("friend!");
+          return true;
+        }
+      }
+      print("he is not my friend");
+      return false;
+    }
+    else {
+      // 友達登録なし
+      print("have no friends");
+      return false;
+    }
+
+  }
+
+  @override Widget build(BuildContext context) {
+
     Widget content;
     if (_friends.isEmpty) {
       content = Center(
@@ -123,4 +161,6 @@ class _FriendsListPageState extends State<FriendsListPage> {
       body: content,
     );
   }
+
+
 }

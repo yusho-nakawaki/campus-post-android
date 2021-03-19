@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'auth/setup_profile.dart';
 import 'friend_files/search_friends.dart';
 import 'routes/timeline_route.dart';
 import 'routes/profile_route.dart';
@@ -13,7 +14,7 @@ import 'routes/blog_route.dart';
 
 class RootWidget extends HookWidget {
   var _routes = [
-    Profile(),
+    FriendDetailsPage(isMe: true),
     Timeline(),
     Timetable(),
     Talk(),
@@ -59,14 +60,74 @@ class RootWidget extends HookWidget {
       }
     }
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () => {},
-          ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(
+                'My App',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.indigoAccent,
+              ),
+            ),
+            ListTile(
+              title: Text('プロフィール変更'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SetupProfile(),
+                    )
+                );
+              },
+            ),
+            ListTile(
+              title: Text('設定'),
+              onTap: () {
+
+              },
+            ),
+            ListTile(
+              title: Text('公式Twitter'),
+              onTap: () {
+
+              },
+            ),
+            ListTile(
+              title: Text('規約'),
+              onTap: () {
+
+              },
+            ),
+            ListTile(
+              title: Text('運営に報告する'),
+              onTap: () {
+
+              },
+            ),
+            ListTile(
+              title: Text('ログアウト'),
+              onTap: () {
+
+              },
+            ),
+          ],
         ),
+      ),
+      appBar: AppBar(
+
+        // leading: Padding(
+          // padding: const EdgeInsets.all(4.0),
+          // child: IconButton(
+          //   icon: Icon(Icons.settings),
+          //   onPressed: () => {},
+          // ),
+        // ),
         title: Text(_itemNames[state]),
         centerTitle: true,
         actions: [
