@@ -16,8 +16,8 @@ class Friend {
     this.department,
   });
 
-  final String avatar;
-  final String name;
+  String avatar;
+  String name;
   final String email;
   String introduction;
   String age; //これは年度入学　例）2021とか2020

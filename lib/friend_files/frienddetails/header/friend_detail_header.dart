@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../database_sqlite.dart';
 import '../../friends_model.dart';
 import 'diagonally_cut_colored_image.dart';
 
@@ -30,6 +31,7 @@ class _FriendDetailHeader extends State<FriendDetailHeader> {
 
   static const BACKGROUND_IMAGE = 'assets/images/noImage.png';
   final _databaseReference = FirebaseDatabase.instance.reference();
+  DatabaseHelper _dbHelper = DatabaseHelper();
 
   // buildは最初に呼ばれるメソッド
   @override Widget build(BuildContext context) {
@@ -89,7 +91,7 @@ class _FriendDetailHeader extends State<FriendDetailHeader> {
 
   Widget _buildFollowerInfo(TextTheme textTheme) {
     var followerStyle =
-        textTheme.subtitle1.copyWith(color: const Color(0xBBFFFFFF));
+    textTheme.subtitle1.copyWith(color: const Color(0xBBFFFFFF));
 
     return new Padding(
       padding: const EdgeInsets.only(top: 16.0),
@@ -147,7 +149,7 @@ class _FriendDetailHeader extends State<FriendDetailHeader> {
       String text, {
         Color backgroundColor = Colors.transparent,
         Color textColor = Colors.white70,
-  }) {
+      }) {
     return new ClipRRect(
       borderRadius: new BorderRadius.circular(30.0),
       child: new MaterialButton(
@@ -184,29 +186,29 @@ class _FriendDetailHeader extends State<FriendDetailHeader> {
           }
           if (text == '友達追加') {
             // フォロー
-            SharedPreferences pref = await SharedPreferences.getInstance();
-            dynamic _myFriends = pref.get("friendsList");
+            dynamic _myFriends = await _dbHelper.getMyFriends();
             if (_myFriends is List<String>) {
               _myFriends.add(widget.friend.email);
-              pref.setStringList("friendsList", _myFriends);
+              await _dbHelper.insertFriend(widget.friend.email, _myFriends.length);
             }
             else {
-              pref.setStringList("friendsList", [widget.friend.email]);
+              await _dbHelper.insertFriend(widget.friend.email, 0);
             }
+
             widget.isFriend = true;
             setState(() {});
           }
           if (text == 'フォロー中') {
             // フォローを解除
-            SharedPreferences pref = await SharedPreferences.getInstance();
-            List<String> _myFriends =  pref.get("friendsList");
-            for (int i = 0; i < _myFriends.length; i++) {
-              if (_myFriends[i] == widget.friend.email) {
-                _myFriends.removeAt(i);
-                break;
-              }
-            }
-            pref.setStringList("friendsList", _myFriends);
+            // dynamic _myFriends = await _dbHelper.getMyFriends();
+            // if (_myFriends is List<String>) {
+            //   for (int i=0; i<_myFriends.length; i++){
+            //     if (widget.friend.email == _myFriends[i]) {
+                  await _dbHelper.deleteFriend(widget.friend.email);
+            //       break;
+            //     }
+            //   }
+            // }
             widget.isFriend = false;
             setState(() {});
           }

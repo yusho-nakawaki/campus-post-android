@@ -1,10 +1,12 @@
 import 'package:campuspost/providers.dart';
 import 'package:campuspost/routes/timetable_route.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'auth/setup_profile.dart';
+import 'friend_files/friends_model.dart';
 import 'friend_files/search_friends.dart';
 import 'routes/timeline_route.dart';
 import 'routes/profile_route.dart';
@@ -38,6 +40,10 @@ class RootWidget extends HookWidget {
     'やりとり',
     'ブログ',
   ];
+
+
+  final _databaseReference = FirebaseDatabase.instance.reference();
+
   @override
   Widget build(BuildContext context) {
 
@@ -77,12 +83,16 @@ class RootWidget extends HookWidget {
             ),
             ListTile(
               title: Text('プロフィール変更'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SetupProfile(),
-                    )
+              onTap: () async {
+                var friendInfo = await getMyInfo(_userID);
+                Navigator.of(context).push(
+                  new MaterialPageRoute(
+                    builder: (c) {
+                      return new SetupProfile(
+                        friendInfo: friendInfo,
+                      );
+                    },
+                  ),
                 );
               },
             ),
@@ -122,11 +132,11 @@ class RootWidget extends HookWidget {
       appBar: AppBar(
 
         // leading: Padding(
-          // padding: const EdgeInsets.all(4.0),
-          // child: IconButton(
-          //   icon: Icon(Icons.settings),
-          //   onPressed: () => {},
-          // ),
+        // padding: const EdgeInsets.all(4.0),
+        // child: IconButton(
+        //   icon: Icon(Icons.settings),
+        //   onPressed: () => {},
+        // ),
         // ),
         title: Text(_itemNames[state]),
         centerTitle: true,
@@ -139,7 +149,7 @@ class RootWidget extends HookWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => FriendsListPage(
-                        // riverpodがよくわからなくて、画面遷移でemailを渡している
+                      // riverpodがよくわからなくて、画面遷移でemailを渡している
                         myEmail: _userID
                     ),
                     )
@@ -168,5 +178,28 @@ class RootWidget extends HookWidget {
       ),
 
     );
+  }
+
+
+  Future<Friend> getMyInfo(String userId) async {
+    var snapshot = await _databaseReference
+        .child('users').child(userId).child('info').once();
+
+    if (snapshot.value != null) {
+      return Friend(
+        avatar: snapshot.value['picture'],
+        name: snapshot.value['name'],
+        email: userId,
+        introduction: snapshot.value['introduction'],
+        age: snapshot.value['age'],
+        university: snapshot.value['university'],
+        faculty: snapshot.value['faculty'],
+        department: snapshot.value['department'],
+      );
+    }
+    else {
+      return Friend(avatar: "", name: "abc", email: userId, introduction: "", age: "",
+          university: "", faculty: "", department: "");
+    }
   }
 }

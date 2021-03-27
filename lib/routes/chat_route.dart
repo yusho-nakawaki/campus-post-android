@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter/material.dart';
 import 'package:campuspost/talk_elements/bubble.dart';
 import 'package:campuspost/providers.dart';
@@ -30,7 +31,7 @@ class Chat extends HookWidget {
     return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now().toLocal());
   }
 
-  Chat({String chatID, String partnerID, String partnerName, @required isNew}) {
+  Chat({String chatID, String partnerID, String partnerName, @required bool isNew}) {
     this._chatID = chatID;
     this._partnerName = partnerName;
     this._partnerID = partnerID;
@@ -51,14 +52,23 @@ class Chat extends HookWidget {
     String _urlString;
     final picker = ImagePicker();
 
-    Future _takeAPicture() async {
-      final pickedFile = await picker.getImage(source: ImageSource.camera);
-      _image = File(pickedFile.path);
-    }
 
     Future _getImage() async {
       final pickedFile = await picker.getImage(source: ImageSource.gallery);
       _image = File(pickedFile.path);
+      // 画素を下げる
+      var bytes = (await _image.readAsBytes()).lengthInBytes;
+      var kb = bytes / 1024;
+      print(kb);
+      while (kb > 300) {
+        _image = await FlutterNativeImage.compressImage(
+            _image.path,
+            quality: 95);
+        bytes = (await _image.readAsBytes()).lengthInBytes;
+        kb = bytes / 1024;
+        print(kb);
+      }
+
     }
 
     Future<void> upload(File _image) async {
@@ -190,7 +200,7 @@ class Chat extends HookWidget {
                 itemCount: item.length,
                 itemBuilder: (context, index) {
                   return Bubble(
-                    bubbleModel: BubbleModel(
+                      bubbleModel: BubbleModel(
                         id: item[index]['id'],
                         senderEmail: item[index]['sender_email'],
                         content: item[index]['content'],
@@ -207,69 +217,69 @@ class Chat extends HookWidget {
           },
         ),
         bottomNavigationBar: BottomAppBar(
-            child: Row(
-              children: <Widget>[
-                // IconButton(
-                //   icon: Icon(Icons.add),
-                //   onPressed: () => {},
-                // ),
-                IconButton(
-                  icon: Icon(Icons.camera_alt),
-                  onPressed: () async {
-                    await _takeAPicture();
-                    upload(_image).whenComplete(() => {
-                      _insertRealtimeNode(_urlString, "photo")
-                    });
-                  }
-                ),
-                IconButton(
-                  icon: Icon(Icons.photo),
-                  onPressed: () async {
-                    await _getImage();
-                    upload(_image).whenComplete(() => {
-                      _insertRealtimeNode(_urlString, "photo")
-                    });
-                  },
-                ),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelText: 'メッセージを入力',
-                    ),
-                    controller: _textController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
+          child: Row(
+            children: <Widget>[
+              // IconButton(
+              //   icon: Icon(Icons.add),
+              //   onPressed: () => {},
+              // ),
+              // IconButton(
+              //   icon: Icon(Icons.camera_alt),
+              //   onPressed: () async {
+              //     await _takeAPicture();
+              //     upload(_image).whenComplete(() => {
+              //       _insertRealtimeNode(_urlString, "photo")
+              //     });
+              //   }
+              // ),
+              IconButton(
+                icon: Icon(Icons.photo),
+                onPressed: () async {
+                  await _getImage();
+                  upload(_image).whenComplete(() => {
+                    _insertRealtimeNode(_urlString, "photo")
+                  });
+                },
+              ),
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    labelText: 'メッセージを入力',
                   ),
+                  controller: _textController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    if(_textController.text != ''){
-                      if (_isNewConversation == false) {
-                        // 通常の送信
-                        _insertRealtimeNode(_textController.text, "text");
-                        _textController.text = "";
-                      }
-                      else {
-                        // 初めての送信
-                        _isNewConversation = false;
-                        _databaseReference.child("all_users/$_userID/conversations/$_chatID")
-                            .set({"id": _chatID, "my_name": "please set up name", "my_notification": true,
-                                  "partner_email": _partnerID, "partner_name": _partnerName, "partner_notification": true});
-                        _databaseReference.child("all_users/$_partnerID/conversations/$_chatID")
-                            .set({"id": _chatID, "my_name": _partnerName, "my_notification": true,
-                          "partner_email": _userID, "partner_name": "please set up name", "partner_notification": true});
-
-                        _insertRealtimeNode(_textController.text, "text");
-                        _textController.text = "";
-                      }
+              ),
+              IconButton(
+                icon: Icon(Icons.send),
+                onPressed: () {
+                  if(_textController.text != ''){
+                    if (_isNewConversation == false) {
+                      // 通常の送信
+                      _insertRealtimeNode(_textController.text, "text");
+                      _textController.text = "";
                     }
-                  },
-                ),
-              ],
-            ),
+                    else {
+                      // 初めての送信
+                      _isNewConversation = false;
+                      _databaseReference.child("all_users/$_userID/conversations/$_chatID")
+                          .set({"id": _chatID, "my_name": "please set up name", "my_notification": true,
+                        "partner_email": _partnerID, "partner_name": _partnerName, "partner_notification": true});
+                      _databaseReference.child("all_users/$_partnerID/conversations/$_chatID")
+                          .set({"id": _chatID, "my_name": _partnerName, "my_notification": true,
+                        "partner_email": _userID, "partner_name": "please set up name", "partner_notification": true});
+
+                      _insertRealtimeNode(_textController.text, "text");
+                      _textController.text = "";
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
         ),
         backgroundColor: Colors.black12,
       ),

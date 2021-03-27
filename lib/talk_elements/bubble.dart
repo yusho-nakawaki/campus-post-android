@@ -34,8 +34,8 @@ class Bubble extends HookWidget {
           ),
           Container(
             constraints: ((_bubbleModel.type ?? "") == "text") ?
-              BoxConstraints(minWidth: 0, maxWidth: size.width - 100)
-              : BoxConstraints(minWidth: 200, maxWidth: 230),
+            BoxConstraints(minWidth: 0, maxWidth: size.width - 100)
+                : BoxConstraints(minWidth: 200, maxWidth: 230),
             child: Stack(
               children: [
                 Visibility(

@@ -27,8 +27,10 @@ dependencies:
   webview_flutter: ^1.0.7
   like_button: ^1.0.4
   snapping_sheet: ^2.0.2
+  flutter_native_image: ^0.0.5+2 #写真の画素を下げる
   shared_preferences: ^2.0.2 #端末内にデータを簡単に保存できる → たくさんは保存できない
-
+  sqflite: #端末内にデータ保存,大きめのデータもOK
+  path:
 
   cupertino_icons: ^1.0.0
 

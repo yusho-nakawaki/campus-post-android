@@ -54,43 +54,43 @@ class Tile extends HookWidget {
         child: ListTile(
           leading: CircleAvatar(
             child: FutureBuilder(
-              future: _getFriendUrl(),
-              builder: (context, snapshot) {
+                future: _getFriendUrl(),
+                builder: (context, snapshot) {
 
-                // エラー時に表示するWidget
-                if (snapshot.hasError) {
-                  return Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(35)),
-                      color: Colors.blue,
-                    ),
-                  );
-                }
+                  // エラー時に表示するWidget
+                  if (snapshot.hasError) {
+                    return Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(35)),
+                        color: Colors.blue,
+                      ),
+                    );
+                  }
 
-                // Firebaseのinitialize完了したら表示したいWidget
-                if (snapshot.connectionState == ConnectionState.done) {
-                  print(snapshot.data);
-                  return Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(35)),
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: (snapshot.data == null) ? AssetImage('assets/images/noImage.png') :
-                        NetworkImage(
-                            snapshot.data
+                  // Firebaseのinitialize完了したら表示したいWidget
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    print(snapshot.data);
+                    return Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(35)),
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: (snapshot.data == null) ? AssetImage('assets/images/noImage.png') :
+                          NetworkImage(
+                              snapshot.data
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }
+                    );
+                  }
 
-                // Firebaseのinitializeが完了するのを待つ間に表示するWidget
-                return Center(child: CircularProgressIndicator());
-              }
+                  // Firebaseのinitializeが完了するのを待つ間に表示するWidget
+                  return Center(child: CircularProgressIndicator());
+                }
             ),
           ),
           title: Padding(
@@ -108,7 +108,7 @@ class Tile extends HookWidget {
           ),
           subtitle: Text(
               (_conversation.message.contains("https://firebasestorage")) ? "写真が送信されました"
-                :  (_conversation.message ?? "message"),
+                  :  (_conversation.message ?? "message"),
               style: TextStyle(
                 fontWeight: FontWeight.normal,
                 color: Colors.black,

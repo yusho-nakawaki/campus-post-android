@@ -4,8 +4,9 @@ import 'package:campuspost/friend_files/frienddetails/friend_details_page.dart';
 import 'package:campuspost/friend_files/friends_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../database_sqlite.dart';
+
 
 
 class FriendsListPage extends StatefulWidget {
@@ -21,6 +22,7 @@ class FriendsListPage extends StatefulWidget {
 class _FriendsListPageState extends State<FriendsListPage> {
 
   List<Friend> _friends = [];
+  DatabaseHelper _dbHelper = DatabaseHelper();
 
 
   @override
@@ -31,52 +33,38 @@ class _FriendsListPageState extends State<FriendsListPage> {
 
   Future<void> _loadFriends() async {
 
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    dynamic _myFriends = pref.get("friendsList");
-    if (_myFriends is List<String>) {
-      print(_myFriends);
-    }
-    else {
-      print("no insert friends");
-    }
+    List<String> _myFriends = await _dbHelper.getMyFriends();
 
     final _databaseReference = FirebaseDatabase.instance.reference();
-    await _databaseReference.child('users/sae-gmail-com/フォロー')
-        .once().then((snapshot) => {
-       if (snapshot.value != null) {
 
-         // [email]となっている
-         for (int i = 0; i < snapshot.value.length; i++) {
-            _databaseReference
-                .child('users')
-                .child(snapshot.value[i])
-                .child('info')
-                .once()
-                .then((snapshot2) =>
-            {
-              if (snapshot2.value != null) {
-                _friends.add(Friend(
-                  avatar: snapshot2.value['picture'],
-                  name: snapshot2.value['name'],
-                  email: snapshot.value[i],
-                  introduction: snapshot2.value['introduction'],
-                  age: snapshot2.value['age'],
-                  university: snapshot2.value['university'],
-                  faculty: snapshot2.value['faculty'],
-                  department: snapshot2.value['department'],
-                )),
-              },
+    // [email]となっている
+    for (int i = 0; i < _myFriends.length; i++) {
+      _databaseReference
+          .child('users')
+          .child(_myFriends[i])
+          .child('info')
+          .once()
+          .then((snapshot) =>
+      {
+        if (snapshot.value != null) {
+          _friends.add(Friend(
+            avatar: snapshot.value['picture'],
+            name: snapshot.value['name'],
+            email: _myFriends[i],
+            introduction: snapshot.value['introduction'],
+            age: snapshot.value['age'],
+            university: snapshot.value['university'],
+            faculty: snapshot.value['faculty'],
+            department: snapshot.value['department'],
+          )),
+        },
 
-              if (snapshot.value.length == i + 1) {
-                setState(() {}),
-              }
-            })
-         }
-       }
-       else {
-          print("no friends")
-       }
-    });
+        if (_myFriends.length == i + 1) {
+          setState(() {}),
+        }
+      });
+    }
+
   }
 
 
@@ -117,8 +105,7 @@ class _FriendsListPageState extends State<FriendsListPage> {
   }
 
   Future<bool> _isCheckFriend(int index) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    dynamic _myFriends = pref.get("friendsList");
+    List<String> _myFriends = await _dbHelper.getMyFriends();
     if (_myFriends is List<String>) {
       if (_myFriends == null || _myFriends.length == 0) {
         print("oh ... I don't understand SharedPreferences");
