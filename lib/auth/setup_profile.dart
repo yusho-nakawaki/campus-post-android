@@ -172,6 +172,9 @@ class _SetupProfileState extends State<SetupProfile> {
                               child: RaisedButton(
                                 child: Text('学年を選択'),
                                 onPressed: () => {
+                                  
+                                  // **** タップして、選択画面を表示 ****
+                                  
                                   _showReportDialog(
                                       1,
                                       widget.friendInfo.university,
@@ -205,6 +208,7 @@ class _SetupProfileState extends State<SetupProfile> {
                               child: RaisedButton(
                                 child: Text('大学を選択'),
                                 onPressed: () => {
+                                  // **** タップして、選択画面を表示 ****
                                   _showReportDialog(2, widget.friendInfo.university, widget.friendInfo.faculty)
                                 },
                               ),
@@ -234,6 +238,7 @@ class _SetupProfileState extends State<SetupProfile> {
                               child: RaisedButton(
                                 child: Text('学部を選択'),
                                 onPressed: () => {
+                                  // **** タップして、選択画面を表示 ****
                                   _showReportDialog(2, widget.friendInfo.university, widget.friendInfo.faculty)
                                 },
                               ),
@@ -263,6 +268,7 @@ class _SetupProfileState extends State<SetupProfile> {
                               child: RaisedButton(
                                 child: Text('学科を選択'),
                                 onPressed: () => {
+                                  // **** タップして、選択画面を表示 ****
                                   _showReportDialog(2, widget.friendInfo.university, widget.friendInfo.faculty)
                                 },
                               ),
@@ -323,6 +329,7 @@ class _SetupProfileState extends State<SetupProfile> {
     }
   }
 
+  // ダイアログ
   String _showReportDialog(int whichTable, String uni, String fac) {
     FocusScope.of(context).unfocus();
     showDialog(
@@ -349,6 +356,9 @@ class _SetupProfileState extends State<SetupProfile> {
 
 }
 
+
+
+// 他クラスであり、ここで値を選択している
 
 class MultiSelectChipList extends StatefulWidget {
 
