@@ -187,14 +187,14 @@ class RootWidget extends HookWidget {
 
     if (snapshot.value != null) {
       return Friend(
-        avatar: snapshot.value['picture'],
-        name: snapshot.value['name'],
+        avatar: snapshot.value['picture'] ?? "",
+        name: snapshot.value['name'] ?? "",
         email: userId,
-        introduction: snapshot.value['introduction'],
-        age: snapshot.value['age'],
-        university: snapshot.value['university'],
-        faculty: snapshot.value['faculty'],
-        department: snapshot.value['department'],
+        introduction: snapshot.value['introduction'] ?? "",
+        age: snapshot.value['age'] ?? "",
+        university: snapshot.value['university'] ?? "",
+        faculty: snapshot.value['faculty'] ?? "",
+        department: snapshot.value['department'] ?? "",
       );
     }
     else {
