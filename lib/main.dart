@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_file.dart';
 
 //mainだみょーーーん
-//j
 void main() {
   runApp(ProviderScope(child: App()));
 }
