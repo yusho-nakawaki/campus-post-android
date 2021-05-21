@@ -6,6 +6,7 @@ import 'package:intl/date_symbol_data_file.dart';
 
 //mainだみょーーーん
 //yusho2には反映させないみょーん
+//いい感じにできているみょーーん
 void main() {
   runApp(ProviderScope(child: App()));
 }
