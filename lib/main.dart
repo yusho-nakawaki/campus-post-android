@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_file.dart';
 
 //mainだみょーーーん
+//yusho2には反映させないみょーん
 void main() {
   runApp(ProviderScope(child: App()));
 }
