@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_file.dart';
 
-//mainだみょーーーん9
+//mainだみょーーーん
 void main() {
   runApp(ProviderScope(child: App()));
 }
